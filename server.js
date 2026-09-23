@@ -86,12 +86,29 @@ app.get("/", (req, res) => {
 });
 
 app.get("/health", async (req, res) => {
+
   try {
+
     await pool.query("SELECT 1");
+
     res.json({ ok: true, database: "connected" });
+
   } catch (err) {
-    res.status(503).json({ ok: false, database: "error" });
+
+    console.error("ERRO DATABASE:", err.message);
+
+    res.status(503).json({
+
+      ok: false,
+
+      database: "error",
+
+      message: err.message,
+
+    });
+
   }
+
 });
 
 app.post("/auth/register", authLimiter, async (req, res) => {
